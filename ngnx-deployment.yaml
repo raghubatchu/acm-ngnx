@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-nginx-1
-  namespace: iperf
+  namespace: ngnx
 spec:
   replicas: 5
   selector:
