@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-nginx-1
+  name: test-nginx
   namespace: ngnx
 spec:
-  replicas: 6
+  replicas: 2
   selector:
     matchLabels:
-      name: test-nginx-1
+      name: test-nginx
   template:
     metadata:
       labels:
-        name: test-nginx-1
+        name: test-nginx
     spec:
       containers:
       - image: nginx:latest
         imagePullPolicy: Always
-        name: test-nginx-1
+        name: test-nginx
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-nginx-lb-1
+  name: test-nginx-lb
   namespace: ngnx
 spec:
   selector:
-    name: test-nginx-1
+    name: test-nginx
   ports:
   - name: tcp
     port: 80
