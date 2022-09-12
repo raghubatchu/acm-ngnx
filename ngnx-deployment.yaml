@@ -4,7 +4,7 @@ metadata:
   name: test-nginx
   namespace: ngnx
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       name: test-nginx
