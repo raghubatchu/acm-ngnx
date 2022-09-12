@@ -13,10 +13,30 @@ spec:
       labels:
         name: test-nginx
     spec:
+      initContainers:
+      - image: nginx:latest
+        name: nginxinit
+        command: ["/bin/sh", "-c","echo Hello PMEC Team : `date` >> /usr/share/nginx/html/index.html"]
+        volumeMounts:
+          - mountPath: /usr/share/nginx/html
+            name: nfs-vol
+      volumes:
+        - name: nfs-vol
+          persistentVolumeClaim:
+            claimName: test-nginx-pvc        
       containers:
       - image: nginx:latest
-        imagePullPolicy: Always
         name: test-nginx
+        imagePullPolicy: Always
+         ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: /usr/share/nginx/html
+            name: nfs-vol
+      volumes:
+        - name: nfs-vol
+          persistentVolumeClaim:
+            claimName: test-nginx-pvc           
 ---
 apiVersion: v1
 kind: Service
@@ -28,7 +48,20 @@ spec:
     name: test-nginx
   ports:
   - name: tcp
-    port: 8080
+    port: 80
     targetPort: 80
     protocol: TCP
   type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-nginx-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-shared
