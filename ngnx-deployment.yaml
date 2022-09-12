@@ -4,7 +4,7 @@ metadata:
   name: test-nginx
   namespace: ngnx
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       name: test-nginx
@@ -13,30 +13,10 @@ spec:
       labels:
         name: test-nginx
     spec:
-      initContainers:
-      - image: nginx:latest
-        name: nginxinit
-        command: ["/bin/sh", "-c","echo Hello PMEC Team : `date` >> /usr/share/nginx/html/index.html"]
-        volumeMounts:
-          - mountPath: /usr/share/nginx/html
-            name: nfs-vol
-      volumes:
-        - name: nfs-vol
-          persistentVolumeClaim:
-            claimName: test-nginx-pvc        
       containers:
       - image: nginx:latest
-        name: test-nginx
         imagePullPolicy: Always
-         ports:
-        - containerPort: 80
-        volumeMounts:
-          - mountPath: /usr/share/nginx/html
-            name: nfs-vol
-      volumes:
-        - name: nfs-vol
-          persistentVolumeClaim:
-            claimName: test-nginx-pvc           
+        name: test-nginx
 ---
 apiVersion: v1
 kind: Service
@@ -52,17 +32,3 @@ spec:
     targetPort: 80
     protocol: TCP
   type: LoadBalancer
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: test-nginx-pvc
-  namespace: ngnx
-spec:
-  accessModes:
-    - ReadWriteOnce
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: local-shared
