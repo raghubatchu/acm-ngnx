@@ -28,7 +28,7 @@ spec:
     name: test-nginx
   ports:
   - name: tcp
-    port: 80
+    port: 8080
     targetPort: 80
     protocol: TCP
   type: LoadBalancer
