@@ -57,6 +57,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: test-nginx-pvc
+  namespace: ngnx
 spec:
   accessModes:
     - ReadWriteOnce
